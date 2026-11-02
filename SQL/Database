@@ -1,0 +1,175 @@
+
+-- ============================================
+-- DATABASE BIZNUSA OPTIMA
+-- ============================================
+
+CREATE DATABASE IF NOT EXISTS db_biznusa;
+USE db_biznusa;
+
+-- ============================================
+-- 1. TABEL OWNER UMKM
+-- ============================================
+
+CREATE TABLE owner_umkm (
+    id_owner VARCHAR(10) PRIMARY KEY,
+    nama_owner VARCHAR(100) NOT NULL
+);
+
+-- ============================================
+-- 2. TABEL STAF UMKM
+-- ============================================
+
+CREATE TABLE staf_umkm (
+    id_staf VARCHAR(10) PRIMARY KEY,
+    nama_staf VARCHAR(100) NOT NULL,
+    id_owner VARCHAR(10),
+    FOREIGN KEY (id_owner)
+        REFERENCES owner_umkm(id_owner)
+);
+
+-- ============================================
+-- 3. TABEL ABSENSI
+-- ============================================
+
+CREATE TABLE absensi (
+    id_absensi VARCHAR(10) PRIMARY KEY,
+    tanggal DATE NOT NULL,
+    id_staf VARCHAR(10),
+    FOREIGN KEY (id_staf)
+        REFERENCES staf_umkm(id_staf)
+);
+
+-- ============================================
+-- 4. TABEL ADUAN PELANGGAN
+-- ============================================
+
+CREATE TABLE aduan_pelanggan (
+    id_aduan VARCHAR(10) PRIMARY KEY,
+    status_aduan VARCHAR(50) NOT NULL,
+    id_absensi VARCHAR(10),
+    FOREIGN KEY (id_absensi)
+        REFERENCES absensi(id_absensi)
+);
+
+-- ============================================
+-- 5. TABEL STOK GUDANG
+-- ============================================
+
+CREATE TABLE stok_gudang (
+    id_stok VARCHAR(10) PRIMARY KEY,
+    jumlah_stok INT NOT NULL,
+    id_owner VARCHAR(10),
+    FOREIGN KEY (id_owner)
+        REFERENCES owner_umkm(id_owner)
+);
+
+-- ============================================
+-- 6. TABEL TRANSAKSI
+-- ============================================
+
+CREATE TABLE transaksi (
+    id_transaksi VARCHAR(10) PRIMARY KEY,
+    total_transaksi DECIMAL(15,2) NOT NULL,
+    id_staf VARCHAR(10),
+    FOREIGN KEY (id_staf)
+        REFERENCES staf_umkm(id_staf)
+);
+
+-- ============================================
+-- 7. TABEL PEMBAYARAN
+-- ============================================
+
+CREATE TABLE pembayaran (
+    id_pembayaran VARCHAR(10) PRIMARY KEY,
+    status_pembayaran VARCHAR(50) NOT NULL,
+    id_transaksi VARCHAR(10),
+    FOREIGN KEY (id_transaksi)
+        REFERENCES transaksi(id_transaksi)
+);
+
+-- ============================================
+-- INSERT DATA OWNER UMKM
+-- ============================================
+
+INSERT INTO owner_umkm
+(id_owner, nama_owner)
+VALUES
+('OW001', 'Bu Yuyun Winarti');
+
+-- ============================================
+-- INSERT DATA STAF UMKM
+-- ============================================
+
+INSERT INTO staf_umkm
+(id_staf, nama_staf, id_owner)
+VALUES
+('ST001', 'Andi Pratama', 'OW001'),
+('ST002', 'Siti Aminah', 'OW001'),
+('ST003', 'Budi Santoso', 'OW001');
+
+-- ============================================
+-- INSERT DATA ABSENSI
+-- ============================================
+
+INSERT INTO absensi
+(id_absensi, tanggal, id_staf)
+VALUES
+('AB001', '2026-10-27', 'ST001'),
+('AB002', '2026-10-27', 'ST002'),
+('AB003', '2026-10-28', 'ST003');
+
+-- ============================================
+-- INSERT DATA ADUAN PELANGGAN
+-- ============================================
+
+INSERT INTO aduan_pelanggan
+(id_aduan, status_aduan, id_absensi)
+VALUES
+('AD001', 'Menunggu Diproses', 'AB001'),
+('AD002', 'Sedang Ditangani', 'AB002'),
+('AD003', 'Selesai', 'AB003');
+
+-- ============================================
+-- INSERT DATA STOK GUDANG
+-- ============================================
+
+INSERT INTO stok_gudang
+(id_stok, jumlah_stok, id_owner)
+VALUES
+('SK001', 100, 'OW001'),
+('SK002', 75, 'OW001'),
+('SK003', 150, 'OW001');
+
+-- ============================================
+-- INSERT DATA TRANSAKSI
+-- ============================================
+
+INSERT INTO transaksi
+(id_transaksi, total_transaksi, id_staf)
+VALUES
+('TR001', 150000, 'ST001'),
+('TR002', 250000, 'ST002'),
+('TR003', 175000, 'ST003');
+
+-- ============================================
+-- INSERT DATA PEMBAYARAN
+-- ============================================
+
+INSERT INTO pembayaran
+(id_pembayaran, status_pembayaran, id_transaksi)
+VALUES
+('PB001', 'Lunas', 'TR001'),
+('PB002', 'Belum Lunas', 'TR002'),
+('PB003', 'Lunas', 'TR003');
+
+-- ============================================
+-- CEK SELURUH DATA
+-- ============================================
+
+SELECT * FROM owner_umkm;
+SELECT * FROM staf_umkm;
+SELECT * FROM absensi;
+SELECT * FROM aduan_pelanggan;
+SELECT * FROM stok_gudang;
+SELECT * FROM transaksi;
+SELECT * FROM pembayaran;
