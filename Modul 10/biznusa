@@ -113,5 +113,90 @@ SELECT * FROM transaksi;
 SELECT * FROM pembayaran;
 
 Tahap 3 – Praktik Operasi Database (CRUD)
+USE db_biznusa;
+
+INSERT INTO staf_umkm (id_staf, nama_staf, id_owner)
+VALUES ('ST004', 'Dina Permata', 'OW001');
+SELECT * FROM staf_umkm;
+
+UPDATE staf_umkm
+SET nama_staf = 'Dina Maharani'
+WHERE id_staf = 'ST004';
+SELECT * FROM staf_umkm;
+
+DELETE FROM staf_umkm
+WHERE id_staf = 'ST004';
+SELECT * FROM staf_umkm;
+
 Tahap 4 – Pengujian Transaksi Database
+USE db_biznusa;
+
+START TRANSACTION;
+
+-- Menambahkan data staf
+INSERT INTO staf_umkm
+    (id_staf, nama_staf, id_owner, total_transaksi)
+VALUES
+    ('ST005', 'Rina Amelia', 'OW001', 0);
+
+-- Memeriksa data sebelum COMMIT
+SELECT *
+FROM staf_umkm
+WHERE id_staf = 'ST005';
+
+-- Menyimpan perubahan secara permanen
+COMMIT;
+
+-- Memeriksa data setelah COMMIT
+SELECT *
+FROM staf_umkm
+WHERE id_staf = 'ST005';
+
+-- Memulai transaksi
+START TRANSACTION;
+
+-- Menambahkan data staf
+INSERT INTO staf_umkm
+    (id_staf, nama_staf, id_owner, total_transaksi)
+VALUES
+    ('ST006', 'Dewi Lestari', 'OW001', 0);
+
+-- Memeriksa data sebelum ROLLBACK
+SELECT *
+FROM staf_umkm
+WHERE id_staf = 'ST006';
+
+-- Membatalkan perubahan
+ROLLBACK;
+
+-- Memeriksa kembali data setelah ROLLBACK
+SELECT *
+FROM staf_umkm
+WHERE id_staf = 'ST006';
+
 Tahap 5 - Analisis performa database
+USE db_biznusa;
+
+EXPLAIN
+SELECT
+    p.status_pembayaran,
+    COUNT(t.id_transaksi) AS jumlah_transaksi,
+    SUM(t.total_transaksi) AS total_transaksi
+FROM db_biznusa.transaksi t
+JOIN db_biznusa.pembayaran p
+    ON t.id_transaksi = p.id_transaksi
+GROUP BY p.status_pembayaran;
+
+CREATE INDEX idx_pembayaran_id_transaksi
+ON db_biznusa.pembayaran(id_transaksi);
+SHOW INDEX FROM db_biznusa.pembayaran;
+
+EXPLAIN
+SELECT
+    p.status_pembayaran,
+    COUNT(t.id_transaksi) AS jumlah_transaksi,
+    SUM(t.total_transaksi) AS total_transaksi
+FROM db_biznusa.transaksi t
+JOIN db_biznusa.pembayaran p
+    ON t.id_transaksi = p.id_transaksi
+GROUP BY p.status_pembayaran;
