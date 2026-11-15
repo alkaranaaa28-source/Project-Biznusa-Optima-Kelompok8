@@ -81,3 +81,25 @@ WHERE JSON_UNQUOTE(
         '$.metode_pembayaran'
     )
 ) = 'Transfer';
+
+SELECT JSON_OBJECT(
+    'id_owner', 'OW001',
+    'nama_owner', 'Bu Yuyun Winarti',
+    'nama_usaha', 'UMKM BizNusa'
+) AS data_owner;
+
+SELECT JSON_ARRAY(
+    'MySQL',
+    'MariaDB',
+    'PostgreSQL'
+) AS daftar_dbms;
+
+SELECT
+    JSON_VALID(
+        '{"nama_staf":"Andi Pratama","status":"Aktif"}'
+    ) AS json_valid;
+
+SELECT
+    nama_staf,
+    JSON_LENGTH(detail_staf) AS jumlah_atribut
+FROM praktikum_modul11.staf_umkm;
